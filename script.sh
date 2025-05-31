@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 set -e
 
-APP_NAME="RagaPanel"
-NODE_NAME="Raganode"
+APP_NAME="marzneshin"
+NODE_NAME="marznode"
 CONFIG_DIR="/etc/opt/$APP_NAME"
 DATA_DIR="/var/lib/$APP_NAME"
 NODE_DATA_DIR="/var/lib/$NODE_NAME"

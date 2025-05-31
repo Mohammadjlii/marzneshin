@@ -9,7 +9,7 @@ NODE_DATA_DIR="/var/lib/$NODE_NAME"
 COMPOSE_FILE="$CONFIG_DIR/docker-compose.yml"
 
 FETCH_REPO="marzneshin/marzneshin"
-SCRIPT_URL="https://github.com/$FETCH_REPO/raw/master/script.sh"
+SCRIPT_URL="https://raw.githubusercontent.com/Mohammadjlii/marzneshin/master/script.sh"
 
 colorized_echo() {
     local color=$1

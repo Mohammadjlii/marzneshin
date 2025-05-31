@@ -40,6 +40,7 @@ from app.models.proxy import (
     SplitHttpSettings,
     MuxSettings,
 )
+from app.utils.faker import get_fake_limit
 from app.models.settings import SubscriptionSettings
 from app.models.user import UserResponse, UserExpireStrategy
 from app.templates import render_template
@@ -74,22 +75,35 @@ handlers_templates = {
 }
 
 
-def generate_subscription_template(
-    db_user, subscription_settings: SubscriptionSettings
-):
+from app.utils.faker import get_fake_limit  # بالای فایل
+
+def generate_subscription_template(db_user, subscription_settings: SubscriptionSettings):
     links = generate_subscription(
         user=db_user,
         config_format="links",
-        use_placeholder=not db_user.is_active
-        and subscription_settings.placeholder_if_disabled,
+        use_placeholder=not db_user.is_active and subscription_settings.placeholder_if_disabled,
         placeholder_remark=subscription_settings.placeholder_remark,
         shuffle=subscription_settings.shuffle_configs,
     ).split()
+
+    user_model = UserResponse.model_validate(db_user)
+    real_limit = user_model.data_limit or 0
+    real_used = user_model.used_traffic or 0
+
+    # ضرایب فیک
+    FAKE_MULTIPLIER = 1.25
+    fake_total = get_fake_limit(real_limit)
+    fake_used = int(real_used * FAKE_MULTIPLIER)
+
     return render_template(
         SUBSCRIPTION_PAGE_TEMPLATE,
-        {"user": UserResponse.model_validate(db_user), "links": links},
+        {
+            "user": user_model,
+            "links": links,
+            "fake_total": fake_total,
+            "fake_used": fake_used,
+        },
     )
-
 
 def generate_subscription(
     user: "UserResponse",

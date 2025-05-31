@@ -1,5 +1,6 @@
 import re
 from collections import defaultdict
+from app.utils.faker import get_fake_limit
 
 from fastapi import APIRouter
 from fastapi import Header, HTTPException, Path, Request, Response
@@ -35,11 +36,31 @@ config_mimetype = defaultdict(
 )
 
 
+FAKE_MULTIPLIER = 1.25  # یعنی 40 گیگ واقعی → 50 گیگ فیک
+ONE_GB = 1024 * 1024 * 1024
+
+def get_fake_limit(real_bytes):
+    real_gb = real_bytes / ONE_GB
+    fake_gb = real_gb * FAKE_MULTIPLIER
+    return int(fake_gb) * ONE_GB
+
+def get_fake_usage(real_usage, real_limit):
+    if real_limit == 0:
+        return real_usage  # اگه حجم نامحدود بود
+    ratio = real_usage / real_limit
+    fake_limit = get_fake_limit(real_limit)
+    return int(fake_limit * ratio)
+
 def get_subscription_user_info(user: UserResponse) -> dict:
+    real_limit = user.data_limit or 0
+    real_usage = user.used_traffic or 0
+    fake_total = get_fake_limit(real_limit)
+    fake_usage = get_fake_usage(real_usage, real_limit)
+
     return {
         "upload": 0,
-        "download": user.used_traffic,
-        "total": user.data_limit or 0,
+        "download": fake_usage,
+        "total": fake_total,
         "expire": (
             int(user.expire_date.timestamp())
             if user.expire_strategy == "fixed_date"
@@ -145,7 +166,6 @@ client_type_mime_type = {
     "clash": "text/yaml",
     "xray": "application/json",
     "v2ray": "text/plain",
-    "links": "text/plain",
 }
 
 

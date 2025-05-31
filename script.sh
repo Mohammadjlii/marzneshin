@@ -601,4 +601,4 @@ case "$1" in
     shift; install_marzneshin_script "$@";;
     *)
     usage;;
-    esac
+esac

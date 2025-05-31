@@ -126,8 +126,8 @@ install_marzneshin_script() {
 
 install_marzneshin() {
     # Fetch releases
-    FILES_URL_PREFIX="https://raw.githubusercontent.com/marzneshin/marzneshin/master"
-	COMPOSE_FILES_URL="https://raw.githubusercontent.com/marzneshin/marzneshin-deploy/master"
+    FILES_URL_PREFIX="https://raw.githubusercontent.com/Mohammadjlii/marzneshin/master"
+	COMPOSE_FILES_URL="https://raw.githubusercontent.com/Mohammadjlii/marzneshin-deploy/master"
  	database=$1
   	nightly=$2
   

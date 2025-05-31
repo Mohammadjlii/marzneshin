@@ -8,7 +8,7 @@ DATA_DIR="/var/lib/$APP_NAME"
 NODE_DATA_DIR="/var/lib/$NODE_NAME"
 COMPOSE_FILE="$CONFIG_DIR/docker-compose.yml"
 
-FETCH_REPO="marzneshin/marzneshin"
+FETCH_REPO="Mohammadjlii/marzneshin"
 SCRIPT_URL="https://github.com/$FETCH_REPO/raw/master/script.sh"
 
 colorized_echo() {
@@ -126,8 +126,8 @@ install_marzneshin_script() {
 
 install_marzneshin() {
     # Fetch releases
-    FILES_URL_PREFIX="https://raw.githubusercontent.com/marzneshin/marzneshin/master"
-	COMPOSE_FILES_URL="https://raw.githubusercontent.com/marzneshin/marzneshin-deploy/master"
+    FILES_URL_PREFIX="https://raw.githubusercontent.com/Mohammadjlii/marzneshin/master"
+	COMPOSE_FILES_URL="https://raw.githubusercontent.com/Mohammadjlii/marzneshin-deploy/master"
  	database=$1
   	nightly=$2
   

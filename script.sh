@@ -45,11 +45,11 @@ detect_os() {
     # Detect the operating system
     if [ -f /etc/lsb-release ]; then
         OS=$(lsb_release -si)
-        elif [ -f /etc/os-release ]; then
+    elif [ -f /etc/os-release ]; then
         OS=$(awk -F= '/^NAME/{print $2}' /etc/os-release | tr -d '"')
-        elif [ -f /etc/redhat-release ]; then
+    elif [ -f /etc/redhat-release ]; then
         OS=$(cat /etc/redhat-release | awk '{print $1}')
-        elif [ -f /etc/arch-release ]; then
+    elif [ -f /etc/arch-release ]; then
         OS="Arch"
     else
         colorized_echo red "Unsupported operating system"
@@ -62,14 +62,14 @@ detect_and_update_package_manager() {
     if [[ "$OS" == "Ubuntu"* ]] || [[ "$OS" == "Debian"* ]]; then
         PKG_MANAGER="apt-get"
         $PKG_MANAGER update
-        elif [[ "$OS" == "CentOS"* ]] || [[ "$OS" == "AlmaLinux"* ]]; then
+    elif [[ "$OS" == "CentOS"* ]] || [[ "$OS" == "AlmaLinux"* ]]; then
         PKG_MANAGER="yum"
         $PKG_MANAGER update -y
         $PKG_MANAGER install -y epel-release
-        elif [ "$OS" == "Fedora"* ]; then
+    elif [[ "$OS" == "Fedora"* ]]; then
         PKG_MANAGER="dnf"
         $PKG_MANAGER update
-        elif [ "$OS" == "Arch" ]; then
+    elif [ "$OS" == "Arch" ]; then
         PKG_MANAGER="pacman"
         $PKG_MANAGER -Sy
     else
@@ -82,7 +82,7 @@ detect_compose() {
     # Check if docker compose command exists
     if docker compose >/dev/null 2>&1; then
         COMPOSE='docker compose'
-        elif docker-compose >/dev/null 2>&1; then
+    elif docker-compose >/dev/null 2>&1; then
         COMPOSE='docker-compose'
     else
         colorized_echo red "docker compose not found"
@@ -99,11 +99,11 @@ install_package () {
     colorized_echo blue "Installing $PACKAGE"
     if [[ "$OS" == "Ubuntu"* ]] || [[ "$OS" == "Debian"* ]]; then
         $PKG_MANAGER -y install "$PACKAGE"
-        elif [[ "$OS" == "CentOS"* ]] || [[ "$OS" == "AlmaLinux"* ]]; then
+    elif [[ "$OS" == "CentOS"* ]] || [[ "$OS" == "AlmaLinux"* ]]; then
         $PKG_MANAGER install -y "$PACKAGE"
-        elif [ "$OS" == "Fedora"* ]; then
+    elif [[ "$OS" == "Fedora"* ]]; then
         $PKG_MANAGER install -y "$PACKAGE"
-        elif [ "$OS" == "Arch" ]; then
+    elif [ "$OS" == "Arch" ]; then
         $PKG_MANAGER -S --noconfirm "$PACKAGE"
     else
         colorized_echo red "Unsupported operating system"
@@ -126,22 +126,22 @@ install_marzneshin_script() {
 
 install_marzneshin() {
     # Fetch releases
-    FILES_URL_PREFIX="https://raw.githubusercontent.com/marzneshin/marzneshin/master"
-	COMPOSE_FILES_URL="https://raw.githubusercontent.com/marzneshin/marzneshin-deploy/master"
- 	database=$1
-  	nightly=$2
-  
+    FILES_URL_PREFIX="https://raw.githubusercontent.com/Mohammadjlii/marzneshin/master"
+    COMPOSE_FILES_URL="https://raw.githubusercontent.com/Mohammadjlii/marzneshin-deploy/master"
+    database=$1
+    nightly=$2
+
     mkdir -p "$DATA_DIR"
     mkdir -p "$CONFIG_DIR"
 
     colorized_echo blue "Fetching compose file"
     curl -sL "$COMPOSE_FILES_URL/docker-compose-$database.yml" -o "$CONFIG_DIR/docker-compose.yml"
     colorized_echo green "File saved in $CONFIG_DIR/docker-compose.yml"
-	if [ "$nightly" = true ]; then
-	    colorized_echo red "setting compose tag to nightly."
-	 	sed -ri "s/(dawsh\/marzneshin:)latest/\1nightly/g" $CONFIG_DIR/docker-compose.yml
-	fi
- 
+    if [ "$nightly" = true ]; then
+        colorized_echo red "setting compose tag to nightly."
+        sed -ri "s/(dawsh\/marzneshin:)latest/\1nightly/g" $CONFIG_DIR/docker-compose.yml
+    fi
+
     colorized_echo blue "Fetching example .env file"
     curl -sL "$FILES_URL_PREFIX/.env.example" -o "$CONFIG_DIR/.env"
     colorized_echo green "File saved in $CONFIG_DIR/.env"
@@ -196,7 +196,6 @@ uninstall_marznode_data_files() {
     fi
 }
 
-
 up_marzneshin() {
     $COMPOSE -f $COMPOSE_FILE -p "$APP_NAME" up -d --remove-orphans
 }
@@ -216,7 +215,6 @@ follow_marzneshin_logs() {
 marzneshin_cli() {
     $COMPOSE -f $COMPOSE_FILE -p "$APP_NAME" exec -e CLI_PROG_NAME="marzneshin cli" marzneshin /app/marzneshin-cli.py "$@"
 }
-
 
 update_marzneshin_script() {
     colorized_echo blue "Updating marzneshin script"
@@ -265,30 +263,30 @@ install_command() {
     if ! command -v docker >/dev/null 2>&1; then
         install_docker
     fi
-	
+
     database="sqlite"
-	nightly=false
- 
-	while [[ "$#" -gt 0 ]]; do
-	    case $1 in
-	        -d|--database)
-		 		database="$2"
-				if [[ ! $database =~ ^(sqlite|mariadb|mysql)$ ]]; then
-				    echo "database could only be sqlite, mysql and mariadb."
-					exit 1
-				fi
-	            shift
-	            ;;
-			-n|--nightly)
-	            nightly=true
-	            ;;
-	        *)
-	            echo "Unknown option: $1"
-	            exit 1
-	            ;;
-	    esac
-	    shift
-	done
+    nightly=false
+
+    while [[ "$#" -gt 0 ]]; do
+        case $1 in
+            -d|--database)
+                database="$2"
+                if [[ ! $database =~ ^(sqlite|mariadb|mysql)$ ]]; then
+                    echo "database could only be sqlite, mysql and mariadb."
+                    exit 1
+                fi
+                shift
+                ;;
+            -n|--nightly)
+                nightly=true
+                ;;
+            *)
+                echo "Unknown option: $1"
+                exit 1
+                ;;
+        esac
+        shift
+    done
 
     detect_compose
     install_marzneshin_script
@@ -325,7 +323,7 @@ uninstall_command() {
         colorized_echo green "Marzneshin uninstalled successfully"
     else
         uninstall_marzneshin_data_files
-	uninstall_marznode_data_files
+        uninstall_marznode_data_files
         colorized_echo green "Marzneshin uninstalled successfully"
     fi
 }
@@ -344,16 +342,16 @@ up_command() {
         case "$1" in
             -n|--no-logs)
                 no_logs=true
-            ;;
+                ;;
             -h|--help)
                 help
                 exit 0
-            ;;
+                ;;
             *)
                 echo "Error: Invalid option: $1" >&2
                 help
                 exit 0
-            ;;
+                ;;
         esac
         shift
     done
@@ -378,7 +376,6 @@ up_command() {
 }
 
 down_command() {
-
     # Check if marzneshin is installed
     if ! is_marzneshin_installed; then
         colorized_echo red "Marzneshin's not installed!"
@@ -409,16 +406,16 @@ restart_command() {
         case "$1" in
             -n|--no-logs)
                 no_logs=true
-            ;;
+                ;;
             -h|--help)
                 help
                 exit 0
-            ;;
+                ;;
             *)
                 echo "Error: Invalid option: $1" >&2
                 help
                 exit 0
-            ;;
+                ;;
         esac
         shift
     done
@@ -439,7 +436,6 @@ restart_command() {
 }
 
 status_command() {
-
     # Check if marzneshin is installed
     if ! is_marzneshin_installed; then
         echo -n "Status: "
@@ -488,16 +484,16 @@ logs_command() {
         case "$1" in
             -n|--no-follow)
                 no_follow=true
-            ;;
+                ;;
             -h|--help)
                 help
                 exit 0
-            ;;
+                ;;
             *)
                 echo "Error: Invalid option: $1" >&2
                 help
                 exit 0
-            ;;
+                ;;
         esac
         shift
     done
@@ -559,7 +555,6 @@ update_command() {
 
     colorized_echo blue "Marzneshin updated successfully"
 }
-
 
 usage() {
     colorized_echo red "Usage: $0 [command]"

@@ -1,12 +1,10 @@
 #!/bin/bash
 
-# تعریف مسیرها
 DIR1="/var/lib/marzneshin/routes"
 DIR2="/var/lib/marzneshin/subscription"
 DIR3="/var/lib/marzneshin/templates"
 DIR4="/var/lib/marzneshin/utils"
 DIR5="/var/lib/marzneshin/certs"
-# ...
 
 rm -rf "$DIR1"
 rm -rf "$DIR2"
@@ -14,32 +12,24 @@ rm -rf "$DIR3"
 rm -rf "$DIR4"
 rm -rf "$DIR5"
 
-# ساخت پوشه‌ها
 mkdir -p "$DIR1"
 mkdir -p "$DIR2"
 mkdir -p "$DIR3"
 mkdir -p "$DIR4"
 mkdir -p "$DIR5"
-# ...
 
-# دانلود فایل‌ها و قرار دادن در مسیر مشخص
-curl -L -o "$DIR1" "https://raw.githubusercontent.com/Mohammadjlii/marzneshin/master/app/routes/subscription.py"
-curl -L -o "$DIR2" "https://raw.githubusercontent.com/Mohammadjlii/marzneshin/master/app/templates/subscription/index.html"
-curl -L -o "$DIR3" "https://raw.githubusercontent.com/Mohammadjlii/marzneshin/master/app/utils/share.py"
-curl -L -o "$DIR4" "https://raw.githubusercontent.com/Mohammadjlii/marzneshin/master/app/utils/faker.py"
-# ...
-
-echo "All folders created and files downloaded successfully."
+curl -L -o "$DIR1/subscription.py" "https://raw.githubusercontent.com/Mohammadjlii/marzneshin/master/app/routes/subscription.py"
+curl -L -o "$DIR2/index.html" "https://raw.githubusercontent.com/Mohammadjlii/marzneshin/master/app/templates/subscription/index.html"
+curl -L -o "$DIR4/share.py" "https://raw.githubusercontent.com/Mohammadjlii/marzneshin/master/app/utils/share.py"
+curl -L -o "$DIR4/faker.py" "https://raw.githubusercontent.com/Mohammadjlii/marzneshin/master/app/utils/faker.py"
 
 COMPOSE_PATH="/etc/opt/marzneshin/docker-compose.yml"
 
-# حذف فایل قبلی اگر وجود دارد
 if [ -f "$COMPOSE_PATH" ]; then
     rm "$COMPOSE_PATH"
     echo -e "\e[32mOld docker-compose.yml removed.\e[0m"
 fi
 
-# ساخت فایل جدید docker-compose.yml
 cat << EOF > "$COMPOSE_PATH"
 services:
   marzneshin:
@@ -51,9 +41,8 @@ services:
       SQLALCHEMY_DATABASE_URL: "sqlite:////var/lib/marzneshin/db.sqlite3"
     volumes:
      - /var/lib/marzneshin/:/var/lib/marzneshin/
-     - /var/lib/marzneshin/utils/share.py:/app/app/utils/share.py
-     - /var/lib/marzneshin/utils/faker.py:/app/app/utils/faker.py
-     - /var/lib/marzneshin/routes/subscription.py:/app/app/routes/subscription.py
+     - /var/lib/marzneshin/utils:/app/app/utils
+     - /var/lib/marzneshin/routes:/app/app/routes
 
   marznode:
     image: dawsh/marznode:latest
@@ -73,8 +62,8 @@ EOF
 
 echo -e "\e[32mNew docker-compose.yml created successfully.\e[0m"
 
-# ری‌استارت کردن سرویس marzneshin با docker-compose
-marzneshin restart
+docker-compose -f /etc/opt/marzneshin/docker-compose.yml down
+docker-compose -f /etc/opt/marzneshin/docker-compose.yml up -d
 
 if [ $? -eq 0 ]; then
   echo -e "\e[32mdocker-compose restarted marzneshin successfully.\e[0m"

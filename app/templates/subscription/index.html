@@ -2,10 +2,23 @@
 <html lang="fa">
 <head>
   <meta charset="UTF-8">
-  <title>اطلاعات اشتراک - RagaCloud</title>
+  <title>اطلاعات اشتراک</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link href="https://cdn.jsdelivr.net/gh/rastikerdar/vazir-font@v30.1.0/dist/font-face.css" rel="stylesheet" type="text/css" />
   
   <style>
+    @keyframes float {
+      0%, 100% {
+        transform: translateY(0);
+      }
+      50% {
+        transform: translateY(-10px);
+      }
+    }
+
+    .rocket {
+      animation: float 2s ease-in-out infinite;
+    }
 
     .asli {
       background: url('https://4kwallpapers.com/images/wallpapers/windows-server-2025-3840x2400-15386.jpg') no-repeat;
@@ -37,11 +50,15 @@
       position: relative;
     }
 
-    h1 {
+    h1.title {
       font-size: 26px;
       margin-bottom: 20px;
       text-align: center;
       color: #00e676;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 10px;
     }
 
     .status {
@@ -85,17 +102,26 @@
   </style>
 </head>
 <body>
-   <div class="asli"></div>
+  <div class="asli"></div>
+
   <div class="container">
-    <h1>RagaCloud</h1>
+    <h1 class="title">
+      RagaCloud
+      <svg class="rocket" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#00e676" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M2 16.1l6.3-1.8 4.6-4.6-1.8-6.3L2 16.1z"/>
+        <path d="M15 5l4 4"/>
+        <path d="M16 15l4 4"/>
+        <path d="M9 13l4 4"/>
+      </svg>
+    </h1>
 
     <p><strong>نام کاربری:</strong> {{ user.username }} <span class="status">{{ "فعال" if user.is_active else "غیرفعال" }}</span></p>
 
     <canvas id="usageChart" width="200" height="200"></canvas>
 
     <div class="info-text">
-      <p>حجم مصرفی: {{ fake_used | bytesformat }} <p>
-       <p>حجم کل {{ fake_total | bytesformat }}</p>
+      <p>حجم مصرفی: {{ fake_used | bytesformat }}</p>
+      <p>حجم کل {{ fake_total | bytesformat }}</p>
       {% if user.data_limit_reset_strategy != 'no_reset' %}
       <p>(ریست هر {{ user.data_limit_reset_strategy.value }})</p>
       {% endif %}

@@ -3,14 +3,6 @@
 sudo apt-get update && sudo apt-get install -y curl docker-compose git && \
 sudo bash -c "$(curl -sL https://github.com/marzneshin/Marzneshin/raw/master/script.sh)" @ install
 
-trap "echo -e '\nCtrl+C detected! Exiting...'; exit 1" SIGINT
-
-echo "Press Ctrl+C to quit."
-
-while true; do
-  sleep 1
-done
-
 
 echo "Waiting 10 Sec"
 sleep 10

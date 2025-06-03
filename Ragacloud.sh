@@ -8,28 +8,19 @@ DIR4="/var/lib/marzneshin/utils"
 DIR5="/var/lib/marzneshin/certs"
 DIR6="/var/lib/marzneshin/templates/subscription"
 # ...
+rm -rf "$DIR1"
+rm -rf "$DIR2"
+rm -rf "$DIR3"
+rm -rf "$DIR4"
+rm -rf "$DIR5"
+rm -rf "$DIR6"
 
-rm -rf -p "$DIR1"
-rm -rf -p "$DIR2"
-rm -rf -p "$DIR3"
-rm -rf -p "$DIR4"
-rm -rf -p "$DIR5"
-rm -rf -p "$DIR6"
+mkdir -p "$DIR1" "$DIR2" "$DIR3" "$DIR4" "$DIR5" "$DIR6"
 
-# ساخت پوشه‌ها
-mkdir -p "$DIR1"
-mkdir -p "$DIR2"
-mkdir -p "$DIR3"
-mkdir -p "$DIR4"
-mkdir -p "$DIR5"
-mkdir -p "$DIR6"
-# ...
-
-# دانلود فایل‌ها و قرار دادن در مسیر مشخص
 curl -L -o "$DIR1/subscription.py" "https://raw.githubusercontent.com/Mohammadjlii/marzneshin/master/app/routes/subscription.py"
 curl -L -o "$DIR2/index.html" "https://raw.githubusercontent.com/Mohammadjlii/marzneshin/master/app/templates/subscription/index.html"
-curl -L -o "$DIR4/share.py" "https://raw.githubusercontent.com/Mohammadjlii/marzneshin/refs/heads/master/app/utils/share.py"
-curl -L -o "$DIR4/faker.py" "https://raw.githubusercontent.com/Mohammadjlii/marzneshin/refs/heads/master/app/utils/faker.py"
+curl -L -o "$DIR4/share.py" "https://raw.githubusercontent.com/Mohammadjlii/marzneshin/master/app/utils/share.py"
+curl -L -o "$DIR4/faker.py" "https://raw.githubusercontent.com/Mohammadjlii/marzneshin/master/app/utils/faker.py"
 # ...
 
 echo "All folders created and files downloaded successfully."
@@ -53,10 +44,9 @@ services:
     environment:
       SQLALCHEMY_DATABASE_URL: "sqlite:////var/lib/marzneshin/db.sqlite3"
     volumes:
-     - /var/lib/marzneshin/:/var/lib/marzneshin/
-     - /var/lib/marzneshin/utils/share.py:/app/app/utils/share.py
-     - /var/lib/marzneshin/utils/faker.py:/app/app/utils/faker.py
-     - /var/lib/marzneshin/routes/subscription.py:/app/app/routes/subscription.py
+     - /var/lib/marzneshin/utils:/app/app/utils
+     - /var/lib/marzneshin/routes:/app/app/routes
+     - /var/lib/marzneshin:/var/lib/marzneshin
 
   marznode:
     image: dawsh/marznode:latest

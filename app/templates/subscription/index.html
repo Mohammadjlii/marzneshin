@@ -2,9 +2,34 @@
 <html lang="fa">
 <head>
   <meta charset="UTF-8">
-  <title>اطلاعات اشتراک - RagaCloud</title>
+  <title>RagaCloud</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link
+    href="https://cdn.jsdelivr.net/gh/rastikerdar/vazir-font@v30.1.0/dist/font-face.css"
+    rel="stylesheet"
+    type="text/css"
+  />
   <style>
+    
+    .rocket {
+      animation: float 2s ease-in-out infinite;
+    }
+
+    .asli {
+      background: url('https://4kwallpapers.com/images/wallpapers/windows-server-2025-3840x2400-15386.jpg') no-repeat;
+      background-position: center;
+      background-size: cover;
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      z-index: -1;
+    }
+
+    html, body {
+      height: 100%;
+      margin: 0;
+    }
+
     body {
       font-family: Vazir, Tahoma, sans-serif;
       background-color: #121212;
@@ -72,12 +97,35 @@
   </style>
 </head>
 <body>
+   <div class="asli"></div>
   <div class="container">
-    <h1>RagaCloud</h1>
+
+    <h1 class="title">
+      RagaCloud
+      <svg
+        class="rocket"
+        xmlns="http://www.w3.org/2000/svg"
+        width="24"
+        height="24"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="#00e676"
+        stroke-width="2"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+      >
+        <path d="M2 16.1l6.3-1.8 4.6-4.6-1.8-6.3L2 16.1z"/>
+        <path d="M15 5l4 4"/>
+        <path d="M16 15l4 4"/>
+        <path d="M9 13l4 4"/>
+      </svg>
+    </h1>
 
     <p><strong>نام کاربری:</strong> {{ user.username }} <span class="status">{{ "فعال" if user.is_active else "غیرفعال" }}</span></p>
 
     <canvas id="usageChart" width="200" height="200"></canvas>
+
+    <div class="asli"></div>
 
     <div class="info-text">
       <p>حجم مصرفی: {{ fake_used | bytesformat }} / {{ fake_total | bytesformat }}</p>
@@ -96,14 +144,32 @@
     </div>
 
     <div class="links">
-      <h3>لینک‌ها:</h3>
+       <h3>لینک‌ها:</h3>
       {% for link in links %}
-      <input type="text" value="{{ link }}" readonly onclick="this.select();document.execCommand('copy');">
+        <input
+          type="text"
+          value="{{ link }}"
+          readonly
+          onclick="this.select();document.execCommand('copy');"
+          title="برای کپی کلیک کنید"
+        />
       {% endfor %}
     </div>
   </div>
-
+ <script src="https://cdn.jsdelivr.net/npm/jalaali-js@1.1.0/dist/jalaali.min.js"></script>
   <script>
+
+    // تبدیل تاریخ میلادی به شمسی
+
+    const gregDateStr = "{{ user.expire_date.isoformat() if user.expire_date else '' }}";
+    if (gregDateStr) {
+      const gregDate = new Date(gregDateStr);
+      const jDate = jalaali.toJalaali(gregDate);
+      document.getElementById("expire-date").textContent = `${jDate.jy}/${jDate.jm}/${jDate.jd}`;
+    } else {
+      document.getElementById("expire-date").textContent = "نامشخص";
+    }
+
     const canvas = document.getElementById('usageChart');
     const ctx = canvas.getContext('2d');
     const fakeUsed = {{ fake_used }};

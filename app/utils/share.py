@@ -146,13 +146,18 @@ def generate_subscription(
             format_variables,
             chaining_support=subscription_handler.chaining_support,
         )
+        
+        # اگر shuffle خاموش است، کانفیگ‌ها رو الفبایی مرتب کن
+        if not shuffle:
+            configs.sort(key=lambda c: c.remark.lower() if hasattr(c, "remark") else "")
 
-    subscription_handler.add_proxies(configs)
-    config = subscription_handler.render(sort=True, shuffle=shuffle)
+            subscription_handler.add_proxies(configs)
+            # حتما sort رو False بزار چون ما قبلا مرتب کردیم
+            config = subscription_handler.render(sort=False, shuffle=False)
 
-    return (
-        config if not as_base64 else base64.b64encode(config.encode()).decode()
-    )
+            return (
+                config if not as_base64 else base64.b64encode(config.encode()).decode()
+            )
 
 
 def format_time_left(seconds_left: int) -> str:

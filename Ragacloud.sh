@@ -41,7 +41,6 @@ fi
 
 # ساخت فایل جدید docker-compose.yml
 cat << EOF > "$COMPOSE_PATH"
-version: "3.8"
 services:
   marzneshin:
     image: dawsh/marzneshin:latest

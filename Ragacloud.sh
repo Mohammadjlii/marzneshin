@@ -162,6 +162,8 @@ echo "Waiting 5 Sec"
 sleep 5
 echo "Done"
 
+marzneshin cli admin create --sudo
+
 # ری‌استارت کردن سرویس marzneshin با docker-compose
 
 docker-compose -f /etc/opt/marzneshin/docker-compose.yml down

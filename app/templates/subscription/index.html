@@ -131,7 +131,8 @@
     <canvas id="usageChart" width="220" height="220"></canvas>
 
     <div class="info-text">
-      <p>حجم مصرفی: {{ fake_used | bytesformat }} / {{ fake_total | bytesformat }}</p>
+      <p>حجم مصرفی: {{ fake_used | bytesformat }} </p>
+      <p> حجم کل {{ fake_total | bytesformat }}</p>
       {% if user.data_limit_reset_strategy != 'no_reset' %}
       <p>(ریست هر {{ user.data_limit_reset_strategy.value }})</p>
       {% endif %}

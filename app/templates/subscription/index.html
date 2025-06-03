@@ -87,7 +87,7 @@
       {% endif %}
 
       <p>تاریخ پایان اشتراک:
-        {% if user.expire_strategy == "never" %} ندارد
+        {% if user.expire_strategy == "never" %} تاریخ شما به اتمام رسیده
         {% elif user.expire_strategy == "start_on_first_use" %}
           {{ user.usage_duration // 3600 // 24 }} روز پس از اولین استفاده
         {% else %}

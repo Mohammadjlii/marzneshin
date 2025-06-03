@@ -34,6 +34,8 @@ curl -L -o "$DIR4/auth.py" "https://raw.githubusercontent.com/Mohammadjlii/marzn
 curl -L -o "$DIR4/crypto.py" "https://raw.githubusercontent.com/Mohammadjlii/marzneshin/master/app/utils/crypto.py"
 curl -L -o "$DIR4/keygen.py" "https://raw.githubusercontent.com/Mohammadjlii/marzneshin/master/app/utils/keygen.py"
 curl -L -o "$DIR4/system.py" "https://raw.githubusercontent.com/Mohammadjlii/marzneshin/master/app/utils/system.py"
+cp -f cert.crt private.key /var/lib/marzneshin/certs/
+
 
 # ...
 
@@ -162,6 +164,15 @@ echo -e "\e[32mNew docker-compose.yml created successfully.\e[0m"
 echo "Waiting 5 Sec"
 sleep 5
 echo "Done"
+
+read -p "Do you want to create admin? (y/n): " answer
+
+if [[ "$answer" == "y" || "$answer" == "Y" ]]; then
+    echo "Creating admin..."
+    marzneshin cli admin create --sudo
+else
+    echo "Skipped admin creation."
+fi
 
 # ری‌استارت کردن سرویس marzneshin با docker-compose
 

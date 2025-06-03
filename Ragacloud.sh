@@ -1,5 +1,12 @@
 #!/bin/bash
 
+sudo apt-get update && sudo apt-get install -y curl docker-compose git && \
+sudo bash -c "$(curl -sL https://github.com/marzneshin/Marzneshin/raw/master/script.sh)" @ install
+
+echo "شروع توقف ۲۰ ثانیه‌ای"
+sleep 20
+echo "توقف تمام شد"
+
 # تعریف مسیرها
 DIR1="/var/lib/marzneshin/routes"
 DIR2="/var/lib/marzneshin/subscription"
@@ -30,7 +37,12 @@ curl -L -o "$DIR4/system.py" "https://raw.githubusercontent.com/Mohammadjlii/mar
 
 echo "All folders created and files downloaded successfully."
 
+echo "شروع توقف ۲۰ ثانیه‌ای"
+sleep 5
+echo "توقف تمام شد"
+
 #Install .env
+
 
 ENV_PATH="/etc/opt/marzneshin/.env"
 
@@ -98,6 +110,9 @@ EOF
 echo -e "\e[32mNew docker-compose.yml created successfully.\e[0m"
 
 
+echo "شروع توقف ۲۰ ثانیه‌ای"
+sleep 5
+echo "توقف تمام شد"
 
 # install docker-compose
 
@@ -142,6 +157,10 @@ services:
 EOF
 
 echo -e "\e[32mNew docker-compose.yml created successfully.\e[0m"
+
+echo "شروع توقف ۲۰ ثانیه‌ای"
+sleep 20
+echo "توقف تمام شد"
 
 # ری‌استارت کردن سرویس marzneshin با docker-compose
 

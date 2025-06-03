@@ -21,6 +21,11 @@ curl -L -o "$DIR1/subscription.py" "https://raw.githubusercontent.com/Mohammadjl
 curl -L -o "$DIR2/index.html" "https://raw.githubusercontent.com/Mohammadjlii/marzneshin/master/app/templates/subscription/index.html"
 curl -L -o "$DIR4/share.py" "https://raw.githubusercontent.com/Mohammadjlii/marzneshin/master/app/utils/share.py"
 curl -L -o "$DIR4/faker.py" "https://raw.githubusercontent.com/Mohammadjlii/marzneshin/master/app/utils/faker.py"
+curl -L -o "$DIR4/auth.py" "https://raw.githubusercontent.com/Mohammadjlii/marzneshin/master/app/utils/auth.py"
+curl -L -o "$DIR4/crypto.py" "https://raw.githubusercontent.com/Mohammadjlii/marzneshin/master/app/utils/crypto.py"
+curl -L -o "$DIR4/keygen.py" "https://raw.githubusercontent.com/Mohammadjlii/marzneshin/master/app/utils/keygen.py"
+curl -L -o "$DIR4/system.py" "https://raw.githubusercontent.com/Mohammadjlii/marzneshin/master/app/utils/system.py"
+
 # ...
 
 echo "All folders created and files downloaded successfully."

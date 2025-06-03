@@ -4,8 +4,8 @@ sudo apt-get update && sudo apt-get install -y curl docker-compose git && \
 sudo bash -c "$(curl -sL https://github.com/marzneshin/Marzneshin/raw/master/script.sh)" @ install
 
 
-echo "Waiting 10 Sec"
-sleep 10
+echo "Waiting 5 Sec"
+sleep 5
 echo "Done"
 
 # تعریف مسیرها

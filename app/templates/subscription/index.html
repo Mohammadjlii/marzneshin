@@ -97,35 +97,14 @@
   </style>
 </head>
 <body>
-   <div class="asli"></div>
   <div class="container">
-
-    <h1 class="title">
-      RagaCloud
-      <svg
-        class="rocket"
-        xmlns="http://www.w3.org/2000/svg"
-        width="24"
-        height="24"
-        viewBox="0 0 24 24"
-        fill="none"
-        stroke="#00e676"
-        stroke-width="2"
-        stroke-linecap="round"
-        stroke-linejoin="round"
-      >
-        <path d="M2 16.1l6.3-1.8 4.6-4.6-1.8-6.3L2 16.1z"/>
-        <path d="M15 5l4 4"/>
-        <path d="M16 15l4 4"/>
-        <path d="M9 13l4 4"/>
-      </svg>
-    </h1>
+    <h1>RagaCloud</h1>
 
     <p><strong>نام کاربری:</strong> {{ user.username }} <span class="status">{{ "فعال" if user.is_active else "غیرفعال" }}</span></p>
 
     <canvas id="usageChart" width="200" height="200"></canvas>
 
-    <div class="asli"></div>
+      <div class="asli"></div>
 
     <div class="info-text">
       <p>حجم مصرفی: {{ fake_used | bytesformat }} / {{ fake_total | bytesformat }}</p>
@@ -144,32 +123,14 @@
     </div>
 
     <div class="links">
-       <h3>لینک‌ها:</h3>
+      <h3>لینک‌ها:</h3>
       {% for link in links %}
-        <input
-          type="text"
-          value="{{ link }}"
-          readonly
-          onclick="this.select();document.execCommand('copy');"
-          title="برای کپی کلیک کنید"
-        />
+      <input type="text" value="{{ link }}" readonly onclick="this.select();document.execCommand('copy');">
       {% endfor %}
     </div>
   </div>
- <script src="https://cdn.jsdelivr.net/npm/jalaali-js@1.1.0/dist/jalaali.min.js"></script>
+
   <script>
-
-    // تبدیل تاریخ میلادی به شمسی
-
-    const gregDateStr = "{{ user.expire_date.isoformat() if user.expire_date else '' }}";
-    if (gregDateStr) {
-      const gregDate = new Date(gregDateStr);
-      const jDate = jalaali.toJalaali(gregDate);
-      document.getElementById("expire-date").textContent = `${jDate.jy}/${jDate.jm}/${jDate.jd}`;
-    } else {
-      document.getElementById("expire-date").textContent = "نامشخص";
-    }
-
     const canvas = document.getElementById('usageChart');
     const ctx = canvas.getContext('2d');
     const fakeUsed = {{ fake_used }};

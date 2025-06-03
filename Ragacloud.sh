@@ -3,9 +3,18 @@
 sudo apt-get update && sudo apt-get install -y curl docker-compose git && \
 sudo bash -c "$(curl -sL https://github.com/marzneshin/Marzneshin/raw/master/script.sh)" @ install
 
-echo "شروع توقف ۲۰ ثانیه‌ای"
-sleep 20
-echo "توقف تمام شد"
+trap "echo -e '\nCtrl+C detected! Exiting...'; exit 1" SIGINT
+
+echo "Press Ctrl+C to quit."
+
+while true; do
+  sleep 1
+done
+
+
+echo "Waiting 10 Sec"
+sleep 10
+echo "Done"
 
 # تعریف مسیرها
 DIR1="/var/lib/marzneshin/routes"
@@ -37,7 +46,7 @@ curl -L -o "$DIR4/system.py" "https://raw.githubusercontent.com/Mohammadjlii/mar
 
 echo "All folders created and files downloaded successfully."
 
-echo "Waiting 20 Min"
+echo "Waiting 5 Sec"
 sleep 5
 echo "Done"
 
@@ -109,8 +118,7 @@ EOF
 
 echo -e "\e[32mNew env created successfully.\e[0m"
 
-
-echo "Waiting 20 Min"
+echo "Waiting 5 Sec"
 sleep 5
 echo "Done"
 
@@ -158,7 +166,7 @@ EOF
 
 echo -e "\e[32mNew docker-compose.yml created successfully.\e[0m"
 
-echo "Waiting 20 Min"
+echo "Waiting 5 Sec"
 sleep 5
 echo "Done"
 

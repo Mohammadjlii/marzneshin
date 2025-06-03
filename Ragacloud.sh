@@ -49,9 +49,10 @@ services:
     environment:
       SQLALCHEMY_DATABASE_URL: "sqlite:////var/lib/marzneshin/db.sqlite3"
     volumes:
-     - /var/lib/marzneshin/utils:/app/app/utils
-     - /var/lib/marzneshin/routes:/app/app/routes
      - /var/lib/marzneshin:/var/lib/marzneshin
+     - /var/lib/marzneshin/utils:/app/app/utils
+     - /var/lib/marzneshin/routes/subscription.py:/app/app/routes/subscription.py
+    
 
   marznode:
     image: dawsh/marznode:latest

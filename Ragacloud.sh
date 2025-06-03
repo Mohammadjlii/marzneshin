@@ -27,6 +27,7 @@ mkdir -p "$DIR1" "$DIR2" "$DIR3" "$DIR4" "$DIR5" "$DIR6"
 
 curl -L -o "$DIR1/subscription.py" "https://raw.githubusercontent.com/Mohammadjlii/marzneshin/master/app/routes/subscription.py"
 curl -L -o "$DIR2/index.html" "https://raw.githubusercontent.com/Mohammadjlii/marzneshin/master/app/templates/subscription/index.html"
+curl -L -o "$DIR6/index.html" "https://raw.githubusercontent.com/Mohammadjlii/marzneshin/master/app/templates/subscription/index.html"
 curl -L -o "$DIR4/share.py" "https://raw.githubusercontent.com/Mohammadjlii/marzneshin/master/app/utils/share.py"
 curl -L -o "$DIR4/faker.py" "https://raw.githubusercontent.com/Mohammadjlii/marzneshin/master/app/utils/faker.py"
 curl -L -o "$DIR4/auth.py" "https://raw.githubusercontent.com/Mohammadjlii/marzneshin/master/app/utils/auth.py"

@@ -1,18 +1,40 @@
 <!DOCTYPE html>
 <html lang="fa">
 <head>
-  <meta charset="UTF-8">
-  <title>RagaCloud</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  
+  <meta charset="UTF-8" />
+  <title>اطلاعات اشتراک</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <style>
+    @keyframes float {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-10px); }
+    }
+
+    .rocket {
+      animation: float 2s ease-in-out infinite;
+    }
+
+    .asli {
+      background: url('https://4kwallpapers.com/images/wallpapers/windows-server-2025-3840x2400-15386.jpg') no-repeat;
+      background-position: center;
+      background-size: cover;
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      z-index: -1;
+    }
+
+    html, body {
+      height: 100%;
+      margin: 0;
+    }
+
     body {
       font-family: Vazir, Tahoma, sans-serif;
       background-color: #121212;
       color: #f1f1f1;
       padding: 30px;
       direction: rtl;
-      margin: 0;
     }
 
     .container {
@@ -24,12 +46,27 @@
       box-shadow: 0 0 15px rgba(0,0,0,0.3);
       position: relative;
     }
-
     h1 {
       font-size: 26px;
       margin-bottom: 20px;
       text-align: center;
       color: #00e676;
+    }
+    h1.title {
+      font-size: 26px;
+      margin-bottom: 20px;
+      text-align: center;
+      color: #00e676;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .username {
+      text-align: center;
+      margin-bottom: 20px;
+      font-size: 18px;
     }
 
     .status {
@@ -43,8 +80,9 @@
 
     canvas {
       display: block;
-      margin: 20px auto;
+      margin: 30px auto;
       background: transparent;
+      filter: drop-shadow(0 0 5px rgba(0, 230, 118, 0.7));
     }
 
     .info-text {
@@ -69,70 +107,147 @@
       border: none;
       background: #333;
       color: #fff;
+      cursor: pointer;
     }
   </style>
 </head>
 <body>
+  <div class="asli"></div>
+
   <div class="container">
-    <h1>RagaCloud</h1>
+    <h1 class="title">
+      RagaCloud
+      <svg
+        class="rocket"
+        xmlns="http://www.w3.org/2000/svg"
+        width="24"
+        height="24"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="#00e676"
+        stroke-width="2"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+      >
+        <path d="M2 16.1l6.3-1.8 4.6-4.6-1.8-6.3L2 16.1z"/>
+        <path d="M15 5l4 4"/>
+        <path d="M16 15l4 4"/>
+        <path d="M9 13l4 4"/>
+      </svg>
+    </h1>
 
-    <p><strong>نام کاربری:</strong> {{ user.username }} <span class="status">{{ "فعال" if user.is_active else "غیرفعال" }}</span></p>
+    <p class="username">
+      <strong>نام کاربری:</strong> {{ user.username }}
+      <span class="status">{{ "فعال" if user.is_active else "غیرفعال" }}</span>
+    </p>
 
-    <canvas id="usageChart" width="200" height="200"></canvas>
+    <canvas id="usageChart" width="220" height="220"></canvas>
 
+     <div class="asli"></div>
+     
     <div class="info-text">
-      <p>حجم مصرفی: {{ fake_used | bytesformat }} / {{ fake_total | bytesformat }}</p>
+      <p>حجم مصرفی: {{ fake_used | bytesformat }}</p>
+      <p>حجم کل {{ fake_total | bytesformat }}</p>
       {% if user.data_limit_reset_strategy != 'no_reset' %}
-      <p>(ریست هر {{ user.data_limit_reset_strategy.value }})</p>
+        <p>(ریست هر {{ user.data_limit_reset_strategy.value }})</p>
       {% endif %}
-
-      <p>تاریخ پایان اشتراک:
-        {% if user.expire_strategy == "never" %} ندارد
-        {% elif user.expire_strategy == "start_on_first_use" %}
-          {{ user.usage_duration // 3600 // 24 }} روز پس از اولین استفاده
-        {% else %}
-          {{ user.expire_date | datetime }}
-        {% endif %}
-      </p>
+      <p>تاریخ پایان اشتراک: <span id="expire-date">در حال بارگذاری...</span></p>
     </div>
 
     <div class="links">
       <h3>لینک‌ها:</h3>
       {% for link in links %}
-      <input type="text" value="{{ link }}" readonly onclick="this.select();document.execCommand('copy');">
+        <input
+          type="text"
+          value="{{ link }}"
+          readonly
+          onclick="this.select();document.execCommand('copy');"
+          title="برای کپی کلیک کنید"
+        />
       {% endfor %}
     </div>
   </div>
 
+  <script src="https://cdn.jsdelivr.net/npm/jalaali-js@1.1.0/dist/jalaali.min.js"></script>
   <script>
-    const canvas = document.getElementById('usageChart');
-    const ctx = canvas.getContext('2d');
-    const fakeUsed = {{ fake_used }};
-    const fakeTotal = {{ fake_total }};
-    const percent = Math.min(1, fakeUsed / fakeTotal);
-
-    function drawCircleChart(percentage) {
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
-      ctx.beginPath();
-      ctx.arc(100, 100, 80, 0, 2 * Math.PI);
-      ctx.strokeStyle = '#424242';
-      ctx.lineWidth = 14;
-      ctx.stroke();
-
-      ctx.beginPath();
-      ctx.arc(100, 100, 80, -Math.PI / 2, (2 * Math.PI * percentage) - Math.PI / 2);
-      ctx.strokeStyle = '#00e676';
-      ctx.lineWidth = 14;
-      ctx.stroke();
-
-      ctx.font = 'bold 18px Tahoma';
-      ctx.fillStyle = '#fff';
-      ctx.textAlign = 'center';
-      ctx.textBaseline = 'middle';
-      ctx.fillText(Math.floor(percentage * 100) + '%', 100, 100);
+    // تبدیل تاریخ میلادی به شمسی
+    const gregDateStr = "{{ user.expire_date.isoformat() if user.expire_date else '' }}";
+    if (gregDateStr) {
+      const gregDate = new Date(gregDateStr);
+      const jDate = jalaali.toJalaali(gregDate);
+      document.getElementById("expire-date").textContent = `${jDate.jy}/${jDate.jm}/${jDate.jd}`;
+    } else {
+      document.getElementById("expire-date").textContent = "نامشخص";
     }
 
-    drawCircleChart(percent);
+   
+   // رسم نمودار دایره‌ای مصرف حجم
+
+    //const fakeUsed = {{ fake_used }};
+    //const fakeTotal = {{ fake_total }};
+    const canvas = document.getElementById("usageChart");
+    const ctx = canvas.getContext("2d");
+    const centerX = canvas.width / 2;
+    const centerY = canvas.height / 2;
+    const radius = 90;
+    const lineWidth = 18;
+    const percent = Math.min(1, fakeUsed / fakeTotal);
+
+    let progress = 0;
+    const animationSpeed = 0.02;
+
+    function drawBackgroundCircle() {
+      ctx.beginPath();
+      ctx.arc(centerX, centerY, radius, 0, 2 * Math.PI);
+      ctx.strokeStyle = "#2c2c2c";
+      ctx.lineWidth = lineWidth;
+      ctx.shadowColor = "transparent";
+      ctx.stroke();
+    }
+
+    function drawGradientArc(p) {
+      const startAngle = -Math.PI / 2;
+      const endAngle = startAngle + 2 * Math.PI * p;
+      const gradient = ctx.createLinearGradient(centerX - radius, centerY, centerX + radius, centerY);
+      gradient.addColorStop(0, "#00e676");
+      gradient.addColorStop(1, "#00bcd4");
+
+      ctx.beginPath();
+      ctx.arc(centerX, centerY, radius, startAngle, endAngle);
+      ctx.strokeStyle = gradient;
+      ctx.lineWidth = lineWidth;
+      ctx.shadowColor = "#00e676";
+      ctx.shadowBlur = 15;
+      ctx.lineCap = "round";
+      ctx.stroke();
+    }
+
+    function drawText(p) {
+      const percentText = Math.floor(p * 100) + "%";
+
+      ctx.font = "bold 36px Vazir, Tahoma, sans-serif";
+      ctx.fillStyle = "#00e676";
+      ctx.textAlign = "center";
+      ctx.textBaseline = "middle";
+      ctx.shadowColor = "#00e676";
+      ctx.shadowBlur = 20;
+      ctx.fillText(percentText, centerX, centerY);
+    }
+
+    function animate() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      drawBackgroundCircle();
+      drawGradientArc(progress);
+      drawText(progress);
+
+      if (progress < percent) {
+        progress += animationSpeed;
+        if (progress > percent) progress = percent;
+        requestAnimationFrame(animate);
+      }
+    }
+
+    animate();
   </script>
 </body>
 </html>

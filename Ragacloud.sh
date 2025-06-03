@@ -37,9 +37,9 @@ curl -L -o "$DIR4/system.py" "https://raw.githubusercontent.com/Mohammadjlii/mar
 
 echo "All folders created and files downloaded successfully."
 
-echo "شروع توقف ۲۰ ثانیه‌ای"
+echo "Waiting 20 Min"
 sleep 5
-echo "توقف تمام شد"
+echo "Done"
 
 #Install .env
 
@@ -49,7 +49,7 @@ ENV_PATH="/etc/opt/marzneshin/.env"
 # حذف فایل قبلی اگر وجود دارد
 if [ -f "$ENV_PATH" ]; then
     rm "$ENV_PATH"
-    echo -e "\e[32mOld docker-compose.yml removed.\e[0m"
+    echo -e "\e[32mDnv file removed removed.\e[0m"
 fi
 
 # ساخت فایل جدید env
@@ -107,12 +107,12 @@ UVICORN_PORT = 2096
 
 EOF
 
-echo -e "\e[32mNew docker-compose.yml created successfully.\e[0m"
+echo -e "\e[32mNew env created successfully.\e[0m"
 
 
-echo "شروع توقف ۲۰ ثانیه‌ای"
+echo "Waiting 20 Min"
 sleep 5
-echo "توقف تمام شد"
+echo "Done"
 
 # install docker-compose
 
@@ -158,9 +158,9 @@ EOF
 
 echo -e "\e[32mNew docker-compose.yml created successfully.\e[0m"
 
-echo "شروع توقف ۲۰ ثانیه‌ای"
-sleep 20
-echo "توقف تمام شد"
+echo "Waiting 20 Min"
+sleep 5
+echo "Done"
 
 # ری‌استارت کردن سرویس marzneshin با docker-compose
 

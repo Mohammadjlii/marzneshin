@@ -24,10 +24,10 @@ mkdir -p "$DIR5"
 # ...
 
 # دانلود فایل‌ها و قرار دادن در مسیر مشخص
-curl -L -o $DIR1 "https://raw.githubusercontent.com/Mohammadjlii/marzneshin/master/app/routes/subscription.py"
-curl -L -o $DIR2 "https://raw.githubusercontent.com/Mohammadjlii/marzneshin/master/app/templates/subscription/index.html"
-curl -L -o $DIR4 "https://raw.githubusercontent.com/Mohammadjlii/marzneshin/master/app/utils/share.py"
-curl -L -o $DIR4 "https://raw.githubusercontent.com/Mohammadjlii/marzneshin/master/app/utils/faker.py"
+curl -L -o "$DIR1/subscription.py" "https://raw.githubusercontent.com/Mohammadjlii/marzneshin/master/app/routes/subscription.py"
+curl -L -o "$DIR2/index.html" "https://raw.githubusercontent.com/Mohammadjlii/marzneshin/master/app/templates/subscription/index.html"
+curl -L -o "$DIR4/share.py" "https://raw.githubusercontent.com/Mohammadjlii/marzneshin/master/app/utils/share.py"
+curl -L -o "$DIR4/faker.py" "https://raw.githubusercontent.com/Mohammadjlii/marzneshin/master/app/utils/faker.py"
 # ...
 
 echo "All folders created and files downloaded successfully."

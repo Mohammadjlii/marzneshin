@@ -1,5 +1,30 @@
 #!/bin/bash
 
+# تعریف مسیرها
+DIR1="/var/lib/marzneshin/routes"
+DIR2="/var/lib/marzneshin/subscription"
+DIR3="/var/lib/marzneshin/templates"
+DIR4="/var/lib/marzneshin/utils"
+DIR5="/var/lib/marzneshin/certs"
+# ...
+
+# ساخت پوشه‌ها
+mkdir -p "$DIR1"
+mkdir -p "$DIR2"
+mkdir -p "$DIR3"
+mkdir -p "$DIR4"
+mkdir -p "$DIR5"
+# ...
+
+# دانلود فایل‌ها و قرار دادن در مسیر مشخص
+curl -L -o "$DIR1/subscription.py" "https://raw.githubusercontent.com/Mohammadjlii/marzneshin/master/app/routes/subscription.py"
+curl -L -o "$DIR2/file2.py" "https://raw.githubusercontent.com/Mohammadjlii/marzneshin/master/app/templates/subscription/index.html"
+curl -L -o "$DIR3/subscription.py" "https://raw.githubusercontent.com/Mohammadjlii/marzneshin/master/app/utils/share.py"
+curl -L -o "$DIR4/subscription.py" "https://raw.githubusercontent.com/Mohammadjlii/marzneshin/master/app/utils/faker.py"
+# ...
+
+echo "All folders created and files downloaded successfully."
+
 COMPOSE_PATH="/etc/opt/marzneshin/docker-compose.yml"
 
 # حذف فایل قبلی اگر وجود دارد
@@ -44,9 +69,7 @@ EOF
 echo -e "\e[32mNew docker-compose.yml created successfully.\e[0m"
 
 # ری‌استارت کردن سرویس marzneshin با docker-compose
-cd /etc/opt/marzneshin || { echo "Failed to cd to /etc/opt/marzneshin"; exit 1; }
-docker-compose down
-docker-compose up -d
+marzneshin restart
 
 if [ $? -eq 0 ]; then
   echo -e "\e[32mdocker-compose restarted marzneshin successfully.\e[0m"

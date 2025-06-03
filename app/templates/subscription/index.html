@@ -178,14 +178,18 @@
       document.getElementById("expire-date").textContent = "نامشخص";
     }
 
-    // رسم نمودار دایره‌ای مصرف حجم
+   
+   // رسم نمودار دایره‌ای مصرف حجم
+
+    const fakeUsed = {{ fake_used }};
+    const fakeTotal = {{ fake_total }};
     const canvas = document.getElementById("usageChart");
     const ctx = canvas.getContext("2d");
     const centerX = canvas.width / 2;
     const centerY = canvas.height / 2;
     const radius = 90;
     const lineWidth = 18;
-    const percent = Math.min(1, {{ fake_used }} / {{ fake_total }});
+    const percent = Math.min(1, fakeUsed / fakeTotal);
 
     let progress = 0;
     const animationSpeed = 0.02;

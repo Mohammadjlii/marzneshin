@@ -6,13 +6,14 @@ DIR2="/var/lib/marzneshin/subscription"
 DIR3="/var/lib/marzneshin/templates"
 DIR4="/var/lib/marzneshin/utils"
 DIR5="/var/lib/marzneshin/certs"
+DIR6="/var/lib/marzneshin/templates/subscription"
 # ...
 
-rm -rf "$DIR1"
-rm -rf "$DIR2"
-rm -rf "$DIR3"
-rm -rf "$DIR4"
-rm -rf "$DIR5"
+rm -rf -p "$DIR1"
+rm -rf -p "$DIR2"
+rm -rf -p "$DIR3"
+rm -rf -p "$DIR4"
+rm -rf -p "$DIR5"
 
 # ساخت پوشه‌ها
 mkdir -p "$DIR1"
@@ -23,10 +24,10 @@ mkdir -p "$DIR5"
 # ...
 
 # دانلود فایل‌ها و قرار دادن در مسیر مشخص
-wget "$DIR1" "https://raw.githubusercontent.com/Mohammadjlii/marzneshin/master/app/routes/subscription.py"
-wget "$DIR2" "https://raw.githubusercontent.com/Mohammadjlii/marzneshin/master/app/templates/subscription/index.html"
-wget "$DIR3" "https://raw.githubusercontent.com/Mohammadjlii/marzneshin/master/app/utils/share.py"
-wget "$DIR4" "https://raw.githubusercontent.com/Mohammadjlii/marzneshin/master/app/utils/faker.py"
+curl -L -o "$DIR1/subscription.py" "https://raw.githubusercontent.com/Mohammadjlii/marzneshin/master/app/routes/"
+curl -L -o "$DIR2/index.html" "https://raw.githubusercontent.com/Mohammadjlii/marzneshin/master/app/templates/subscription/"
+curl -L -o "$DIR3/share.py" "https://raw.githubusercontent.com/Mohammadjlii/marzneshin/master/app/utils/"
+curl -L -o "$DIR4/faker.py" "https://raw.githubusercontent.com/Mohammadjlii/marzneshin/master/app/utils/"
 # ...
 
 echo "All folders created and files downloaded successfully."

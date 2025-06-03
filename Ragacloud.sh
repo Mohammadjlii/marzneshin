@@ -73,7 +73,9 @@ EOF
 echo -e "\e[32mNew docker-compose.yml created successfully.\e[0m"
 
 # ری‌استارت کردن سرویس marzneshin با docker-compose
-marzneshin restart
+
+docker-compose -f /etc/opt/marzneshin/docker-compose.yml down
+docker-compose -f /etc/opt/marzneshin/docker-compose.yml up -d
 
 if [ $? -eq 0 ]; then
   echo -e "\e[32mdocker-compose restarted marzneshin successfully.\e[0m"

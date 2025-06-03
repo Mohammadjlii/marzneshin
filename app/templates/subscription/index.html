@@ -9,16 +9,10 @@
     rel="stylesheet"
     type="text/css"
   />
-
   <style>
     @keyframes float {
-      0%,
-      100% {
-        transform: translateY(0);
-      }
-      50% {
-        transform: translateY(-10px);
-      }
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-10px); }
     }
 
     .rocket {
@@ -26,20 +20,16 @@
     }
 
     .asli {
-      background: url('https://4kwallpapers.com/images/wallpapers/windows-server-2025-3840x2400-15386.jpg')
-        no-repeat;
+      background: url('https://4kwallpapers.com/images/wallpapers/windows-server-2025-3840x2400-15386.jpg') no-repeat;
       background-position: center;
       background-size: cover;
       position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
       z-index: -1;
     }
 
-    html,
-    body {
+    html, body {
       height: 100%;
       margin: 0;
     }
@@ -58,7 +48,7 @@
       background: #1e1e1e;
       border-radius: 16px;
       padding: 25px;
-      box-shadow: 0 0 15px rgba(0, 0, 0, 0.3);
+      box-shadow: 0 0 15px rgba(0,0,0,0.3);
       position: relative;
     }
 
@@ -90,8 +80,9 @@
 
     canvas {
       display: block;
-      margin: 20px auto;
+      margin: 30px auto;
       background: transparent;
+      filter: drop-shadow(0 0 5px rgba(0, 230, 118, 0.7));
     }
 
     .info-text {
@@ -116,10 +107,10 @@
       border: none;
       background: #333;
       color: #fff;
+      cursor: pointer;
     }
   </style>
 </head>
-
 <body>
   <div class="asli"></div>
 
@@ -138,10 +129,10 @@
         stroke-linecap="round"
         stroke-linejoin="round"
       >
-        <path d="M2 16.1l6.3-1.8 4.6-4.6-1.8-6.3L2 16.1z" />
-        <path d="M15 5l4 4" />
-        <path d="M16 15l4 4" />
-        <path d="M9 13l4 4" />
+        <path d="M2 16.1l6.3-1.8 4.6-4.6-1.8-6.3L2 16.1z"/>
+        <path d="M15 5l4 4"/>
+        <path d="M16 15l4 4"/>
+        <path d="M9 13l4 4"/>
       </svg>
     </h1>
 
@@ -150,37 +141,34 @@
       <span class="status">{{ "فعال" if user.is_active else "غیرفعال" }}</span>
     </p>
 
-    <canvas id="usageChart" width="200" height="200"></canvas>
+    <canvas id="usageChart" width="220" height="220"></canvas>
 
     <div class="info-text">
       <p>حجم مصرفی: {{ fake_used | bytesformat }}</p>
       <p>حجم کل {{ fake_total | bytesformat }}</p>
       {% if user.data_limit_reset_strategy != 'no_reset' %}
-      <p>(ریست هر {{ user.data_limit_reset_strategy.value }})</p>
+        <p>(ریست هر {{ user.data_limit_reset_strategy.value }})</p>
       {% endif %}
-
-      <p>
-        تاریخ پایان اشتراک:
-        <span id="expire-date">در حال بارگذاری...</span>
-      </p>
+      <p>تاریخ پایان اشتراک: <span id="expire-date">در حال بارگذاری...</span></p>
     </div>
 
     <div class="links">
       <h3>لینک‌ها:</h3>
       {% for link in links %}
-      <input
-        type="text"
-        value="{{ link }}"
-        readonly
-        onclick="this.select();document.execCommand('copy');"
-      />
+        <input
+          type="text"
+          value="{{ link }}"
+          readonly
+          onclick="this.select();document.execCommand('copy');"
+          title="برای کپی کلیک کنید"
+        />
       {% endfor %}
     </div>
   </div>
 
   <script src="https://cdn.jsdelivr.net/npm/jalaali-js@1.1.0/dist/jalaali.min.js"></script>
   <script>
-    // تبدیل تاریخ میلادی به شمسی با jalaali-js
+    // تبدیل تاریخ میلادی به شمسی
     const gregDateStr = "{{ user.expire_date.isoformat() if user.expire_date else '' }}";
     if (gregDateStr) {
       const gregDate = new Date(gregDateStr);
@@ -190,35 +178,70 @@
       document.getElementById("expire-date").textContent = "نامشخص";
     }
 
-    // رسم نمودار مصرف
+    // رسم نمودار دایره‌ای مصرف حجم
     const canvas = document.getElementById("usageChart");
     const ctx = canvas.getContext("2d");
-    const fakeUsed = {{ fake_used }};
-    const fakeTotal = {{ fake_total }};
-    const percent = Math.min(1, fakeUsed / fakeTotal);
+    const centerX = canvas.width / 2;
+    const centerY = canvas.height / 2;
+    const radius = 90;
+    const lineWidth = 18;
+    const percent = Math.min(1, {{ fake_used }} / {{ fake_total }});
 
-    function drawCircleChart(percentage) {
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
+    let progress = 0;
+    const animationSpeed = 0.02;
+
+    function drawBackgroundCircle() {
       ctx.beginPath();
-      ctx.arc(100, 100, 80, 0, 2 * Math.PI);
-      ctx.strokeStyle = "#424242";
-      ctx.lineWidth = 14;
+      ctx.arc(centerX, centerY, radius, 0, 2 * Math.PI);
+      ctx.strokeStyle = "#2c2c2c";
+      ctx.lineWidth = lineWidth;
+      ctx.shadowColor = "transparent";
       ctx.stroke();
-
-      ctx.beginPath();
-      ctx.arc(100, 100, 80, -Math.PI / 2, 2 * Math.PI * percentage - Math.PI / 2);
-      ctx.strokeStyle = "#00e676";
-      ctx.lineWidth = 14;
-      ctx.stroke();
-
-      ctx.font = "bold 18px Tahoma";
-      ctx.fillStyle = "#fff";
-      ctx.textAlign = "center";
-      ctx.textBaseline = "middle";
-      ctx.fillText(Math.floor(percentage * 100) + "%", 100, 100);
     }
 
-    drawCircleChart(percent);
+    function drawGradientArc(p) {
+      const startAngle = -Math.PI / 2;
+      const endAngle = startAngle + 2 * Math.PI * p;
+      const gradient = ctx.createLinearGradient(centerX - radius, centerY, centerX + radius, centerY);
+      gradient.addColorStop(0, "#00e676");
+      gradient.addColorStop(1, "#00bcd4");
+
+      ctx.beginPath();
+      ctx.arc(centerX, centerY, radius, startAngle, endAngle);
+      ctx.strokeStyle = gradient;
+      ctx.lineWidth = lineWidth;
+      ctx.shadowColor = "#00e676";
+      ctx.shadowBlur = 15;
+      ctx.lineCap = "round";
+      ctx.stroke();
+    }
+
+    function drawText(p) {
+      const percentText = Math.floor(p * 100) + "%";
+
+      ctx.font = "bold 36px Vazir, Tahoma, sans-serif";
+      ctx.fillStyle = "#00e676";
+      ctx.textAlign = "center";
+      ctx.textBaseline = "middle";
+      ctx.shadowColor = "#00e676";
+      ctx.shadowBlur = 20;
+      ctx.fillText(percentText, centerX, centerY);
+    }
+
+    function animate() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      drawBackgroundCircle();
+      drawGradientArc(progress);
+      drawText(progress);
+
+      if (progress < percent) {
+        progress += animationSpeed;
+        if (progress > percent) progress = percent;
+        requestAnimationFrame(animate);
+      }
+    }
+
+    animate();
   </script>
 </body>
 </html>

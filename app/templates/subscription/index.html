@@ -1,14 +1,19 @@
 <!DOCTYPE html>
 <html lang="fa">
 <head>
-  <meta charset="UTF-8">
+  <meta charset="UTF-8" />
   <title>اطلاعات اشتراک</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link href="https://cdn.jsdelivr.net/gh/rastikerdar/vazir-font@v30.1.0/dist/font-face.css" rel="stylesheet" type="text/css" />
-  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link
+    href="https://cdn.jsdelivr.net/gh/rastikerdar/vazir-font@v30.1.0/dist/font-face.css"
+    rel="stylesheet"
+    type="text/css"
+  />
+
   <style>
     @keyframes float {
-      0%, 100% {
+      0%,
+      100% {
         transform: translateY(0);
       }
       50% {
@@ -21,7 +26,8 @@
     }
 
     .asli {
-      background: url('https://4kwallpapers.com/images/wallpapers/windows-server-2025-3840x2400-15386.jpg') no-repeat;
+      background: url('https://4kwallpapers.com/images/wallpapers/windows-server-2025-3840x2400-15386.jpg')
+        no-repeat;
       background-position: center;
       background-size: cover;
       position: fixed;
@@ -31,13 +37,19 @@
       height: 100%;
       z-index: -1;
     }
+
+    html,
+    body {
+      height: 100%;
+      margin: 0;
+    }
+
     body {
       font-family: Vazir, Tahoma, sans-serif;
       background-color: #121212;
       color: #f1f1f1;
       padding: 30px;
       direction: rtl;
-      margin: 0;
     }
 
     .container {
@@ -46,7 +58,7 @@
       background: #1e1e1e;
       border-radius: 16px;
       padding: 25px;
-      box-shadow: 0 0 15px rgba(0,0,0,0.3);
+      box-shadow: 0 0 15px rgba(0, 0, 0, 0.3);
       position: relative;
     }
 
@@ -59,6 +71,12 @@
       justify-content: center;
       align-items: center;
       gap: 10px;
+    }
+
+    .username {
+      text-align: center;
+      margin-bottom: 20px;
+      font-size: 18px;
     }
 
     .status {
@@ -101,21 +119,36 @@
     }
   </style>
 </head>
+
 <body>
   <div class="asli"></div>
 
   <div class="container">
     <h1 class="title">
       RagaCloud
-      <svg class="rocket" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#00e676" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-        <path d="M2 16.1l6.3-1.8 4.6-4.6-1.8-6.3L2 16.1z"/>
-        <path d="M15 5l4 4"/>
-        <path d="M16 15l4 4"/>
-        <path d="M9 13l4 4"/>
+      <svg
+        class="rocket"
+        xmlns="http://www.w3.org/2000/svg"
+        width="24"
+        height="24"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="#00e676"
+        stroke-width="2"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+      >
+        <path d="M2 16.1l6.3-1.8 4.6-4.6-1.8-6.3L2 16.1z" />
+        <path d="M15 5l4 4" />
+        <path d="M16 15l4 4" />
+        <path d="M9 13l4 4" />
       </svg>
     </h1>
 
-    <p><strong>نام کاربری:</strong> {{ user.username }} <span class="status">{{ "فعال" if user.is_active else "غیرفعال" }}</span></p>
+    <p class="username">
+      <strong>نام کاربری:</strong> {{ user.username }}
+      <span class="status">{{ "فعال" if user.is_active else "غیرفعال" }}</span>
+    </p>
 
     <canvas id="usageChart" width="200" height="200"></canvas>
 
@@ -126,27 +159,40 @@
       <p>(ریست هر {{ user.data_limit_reset_strategy.value }})</p>
       {% endif %}
 
-      <p>تاریخ پایان اشتراک:
-        {% if user.expire_strategy == "never" %} تاریخ شما به اتمام رسیده
-        {% elif user.expire_strategy == "start_on_first_use" %}
-          {{ user.usage_duration // 3600 // 24 }} روز پس از اولین استفاده
-        {% else %}
-          {{ user.expire_date | datetime }}
-        {% endif %}
+      <p>
+        تاریخ پایان اشتراک:
+        <span id="expire-date">در حال بارگذاری...</span>
       </p>
     </div>
 
     <div class="links">
       <h3>لینک‌ها:</h3>
       {% for link in links %}
-      <input type="text" value="{{ link }}" readonly onclick="this.select();document.execCommand('copy');">
+      <input
+        type="text"
+        value="{{ link }}"
+        readonly
+        onclick="this.select();document.execCommand('copy');"
+      />
       {% endfor %}
     </div>
   </div>
 
+  <script src="https://cdn.jsdelivr.net/npm/jalaali-js@1.1.0/dist/jalaali.min.js"></script>
   <script>
-    const canvas = document.getElementById('usageChart');
-    const ctx = canvas.getContext('2d');
+    // تبدیل تاریخ میلادی به شمسی با jalaali-js
+    const gregDateStr = "{{ user.expire_date.isoformat() if user.expire_date else '' }}";
+    if (gregDateStr) {
+      const gregDate = new Date(gregDateStr);
+      const jDate = jalaali.toJalaali(gregDate);
+      document.getElementById("expire-date").textContent = `${jDate.jy}/${jDate.jm}/${jDate.jd}`;
+    } else {
+      document.getElementById("expire-date").textContent = "نامشخص";
+    }
+
+    // رسم نمودار مصرف
+    const canvas = document.getElementById("usageChart");
+    const ctx = canvas.getContext("2d");
     const fakeUsed = {{ fake_used }};
     const fakeTotal = {{ fake_total }};
     const percent = Math.min(1, fakeUsed / fakeTotal);
@@ -155,21 +201,21 @@
       ctx.clearRect(0, 0, canvas.width, canvas.height);
       ctx.beginPath();
       ctx.arc(100, 100, 80, 0, 2 * Math.PI);
-      ctx.strokeStyle = '#424242';
+      ctx.strokeStyle = "#424242";
       ctx.lineWidth = 14;
       ctx.stroke();
 
       ctx.beginPath();
-      ctx.arc(100, 100, 80, -Math.PI / 2, (2 * Math.PI * percentage) - Math.PI / 2);
-      ctx.strokeStyle = '#00e676';
+      ctx.arc(100, 100, 80, -Math.PI / 2, 2 * Math.PI * percentage - Math.PI / 2);
+      ctx.strokeStyle = "#00e676";
       ctx.lineWidth = 14;
       ctx.stroke();
 
-      ctx.font = 'bold 18px Tahoma';
-      ctx.fillStyle = '#fff';
-      ctx.textAlign = 'center';
-      ctx.textBaseline = 'middle';
-      ctx.fillText(Math.floor(percentage * 100) + '%', 100, 100);
+      ctx.font = "bold 18px Tahoma";
+      ctx.fillStyle = "#fff";
+      ctx.textAlign = "center";
+      ctx.textBaseline = "middle";
+      ctx.fillText(Math.floor(percentage * 100) + "%", 100, 100);
     }
 
     drawCircleChart(percent);
